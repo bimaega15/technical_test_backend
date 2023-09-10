@@ -25,6 +25,9 @@ import typeAbsenceRoutes from "./modules/master/typeAbsence/route";
 import typeLeaveRoutes from "./modules/master/typeLeave/route";
 import employeeRoutes from "./modules/master/employee/route";
 
+// for data-pegawai
+import absenceRoutes from "./modules/transaction/absence/route";
+
 class App {
   public app: Application;
 
@@ -68,6 +71,7 @@ class App {
   }
 
   protected routes(): void {
+    // master
     this.app.use("/api/master/admin", adminRoutes);
     this.app.use("/api/master/client", clientRoutes);
     this.app.use("/api/master/schedule", scheduleRoutes);
@@ -76,6 +80,10 @@ class App {
     this.app.use("/api/master/typeLeave", typeLeaveRoutes);
     this.app.use("/api/master/employee", employeeRoutes);
 
+    // transaction
+    this.app.use("/api/transaction/absence", absenceRoutes);
+
+    // auth
     this.app.use("/api/auth", authRoutes);
 
     this.app.use(function (req, res, next) {

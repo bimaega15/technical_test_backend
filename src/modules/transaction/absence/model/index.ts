@@ -6,7 +6,7 @@ const schema = new Schema(
       type: Types.ObjectId,
       ref: "Client",
     },
-    typeLeaveRef: {
+    employeeRef: {
       type: Types.ObjectId,
       ref: "Employee",
     },
