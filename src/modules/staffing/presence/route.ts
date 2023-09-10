@@ -8,10 +8,7 @@ class PresenceRoutes extends BaseRoutes {
     this.router.use(verifyToken);
 
     this.router.get("/", PresenceController.index);
-    this.router.post("/", PresenceController.create);
-    this.router.get("/:id", PresenceController.show);
-    this.router.put("/", PresenceController.update);
-    this.router.delete("/:id", PresenceController.delete);
+    this.router.post("/checkIn", PresenceController.checkIn);
   }
 }
 
