@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 import createError from "http-errors";
 import { development } from "./config/database";
 import mongoose, { ConnectOptions } from "mongoose";
-import momentTimezone from 'moment-timezone';
+import momentTimezone from "moment-timezone";
 
 // for admin
 import adminRoutes from "./modules/master/admin/route";
@@ -27,6 +27,7 @@ import employeeRoutes from "./modules/master/employee/route";
 
 // for data-pegawai
 import absenceRoutes from "./modules/transaction/absence/route";
+import leaveBallanceRoutes from "./modules/transaction/leaveBallance/route";
 
 class App {
   public app: Application;
@@ -52,7 +53,7 @@ class App {
     this.app.use(compression());
     this.app.use(helmet());
     this.app.use(cors());
-    momentTimezone.tz.setDefault('Asia/Jakarta');
+    momentTimezone.tz.setDefault("Asia/Jakarta");
   }
 
   protected connectDb(): void {
@@ -82,6 +83,7 @@ class App {
 
     // transaction
     this.app.use("/api/transaction/absence", absenceRoutes);
+    this.app.use("/api/transaction/leaveBallance", leaveBallanceRoutes);
 
     // auth
     this.app.use("/api/auth", authRoutes);

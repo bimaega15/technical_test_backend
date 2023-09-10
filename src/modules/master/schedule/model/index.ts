@@ -14,6 +14,7 @@ const schema = new Schema(
       type: String,
       enum: ["pagi", "siang", "malam", "office"],
     },
+    delayTolerance: Number,
   },
   {
     collection: "schedule",

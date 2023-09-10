@@ -18,6 +18,10 @@ class EmployeeService {
   }
 
   getAll = async () => {
+    const clientRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
+      this.user.usersRef
+    );
+
     const datas = await UsersMapping.aggregate([
       {
         $lookup: {
@@ -83,6 +87,8 @@ class EmployeeService {
         $match: {
           typeMapping: "employee",
           "users.isActive": true,
+          "employee.clientRef": clientRef
+
         },
       },
     ]);

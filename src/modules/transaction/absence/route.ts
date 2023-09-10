@@ -12,7 +12,7 @@ class AbsenceRoutes extends BaseRoutes {
     this.router.get("/", AbsenceController.index);
     this.router.post("/", validate, AbsenceController.create);
     this.router.get("/:id", AbsenceController.show);
-    this.router.put("/:id", validate, AbsenceController.update);
+    this.router.put("/", validate, AbsenceController.update);
     this.router.delete("/:id", AbsenceController.delete);
   }
 }

@@ -7,6 +7,7 @@ const validate = [
   check("timeOut").notEmpty().withMessage("Waktu keluar wajib diisi"),
   check("color").notEmpty().withMessage("Color wajib diisi"),
   check("typeSchedule").notEmpty().withMessage("Jenis jadwal wajib diisi"),
+  check("delayTolerance").notEmpty().withMessage("Toleransi Keterlambatan wajib diisi"),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
 

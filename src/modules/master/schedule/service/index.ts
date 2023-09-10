@@ -27,6 +27,15 @@ class ScheduleService {
       },
       {
         $addFields: {
+          delayTolerance: {
+            $dateToString: {
+              format: "%M:%S",
+              date: {
+                $toDate: "$delayTolerance",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
           timeEntry: {
             $dateToString: {
               format: "%H:%M",
@@ -52,7 +61,14 @@ class ScheduleService {
   };
 
   store = async () => {
-    const { timeEntry, timeOut, isActive, color, typeSchedule } = this.body;
+    const {
+      timeEntry,
+      timeOut,
+      isActive,
+      color,
+      typeSchedule,
+      delayTolerance,
+    } = this.body;
 
     let setIsActive =
       isActive != undefined ? (isActive == 1 ? true : false) : false;
@@ -61,6 +77,7 @@ class ScheduleService {
       clientRef: this.user.usersRef,
       timeEntry: moment(timeEntry, "HH:mm").valueOf(),
       timeOut: moment(timeOut, "HH:mm").valueOf(),
+      delayTolerance: moment(delayTolerance, "mm:ss").valueOf(),
       isActive: setIsActive,
       color,
       typeSchedule,
@@ -113,7 +130,14 @@ class ScheduleService {
 
   update = async () => {
     const { id } = this.params;
-    const { timeEntry, timeOut, isActive, color, typeSchedule } = this.body;
+    const {
+      timeEntry,
+      timeOut,
+      isActive,
+      color,
+      typeSchedule,
+      delayTolerance,
+    } = this.body;
 
     let setIsActive =
       isActive != undefined ? (isActive == 1 ? true : false) : false;
@@ -123,6 +147,7 @@ class ScheduleService {
         clientRef: this.user.usersRef,
         timeEntry: moment(timeEntry, "HH:mm").valueOf(),
         timeOut: moment(timeOut, "HH:mm").valueOf(),
+        delayTolerance: moment(delayTolerance, "mm:ss").valueOf(),
         isActive: setIsActive,
         color,
         typeSchedule,
