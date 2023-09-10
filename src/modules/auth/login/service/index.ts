@@ -145,7 +145,6 @@ class AuthService {
               },
             },
 
-
             {
               $match: {
                 usersRef: dataUsers._id,
@@ -153,6 +152,76 @@ class AuthService {
             },
             {
               $limit: 1,
+            },
+          ]);
+        }
+
+        if (getUsersMapping.typeMapping == "employee") {
+          data = await UsersMapping.aggregate([
+            {
+              $lookup: {
+                from: "employee",
+                localField: "usersMappingRef",
+                foreignField: "usersMappingRef",
+                as: "employee",
+              },
+            },
+            {
+              $unwind: "$employee",
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "usersRef",
+                foreignField: "_id",
+                as: "users",
+              },
+            },
+            {
+              $unwind: "$users",
+            },
+            {
+              $addFields: {
+                "employee.gender": {
+                  $cond: {
+                    if: { $eq: ["$employee.gender", "L"] },
+                    then: "laki-laki",
+                    else: "perempuan",
+                  },
+                },
+                "employee.birthDate": {
+                  $dateToString: {
+                    format: "%d/%m/%Y",
+                    date: {
+                      $toDate: "$employee.birthDate",
+                    },
+                    timezone: "Asia/Jakarta",
+                  },
+                },
+                "employee.dateOfEntry": {
+                  $dateToString: {
+                    format: "%d/%m/%Y",
+                    date: {
+                      $toDate: "$employee.dateOfEntry",
+                    },
+                    timezone: "Asia/Jakarta",
+                  },
+                },
+                "employee.outDate": {
+                  $dateToString: {
+                    format: "%d/%m/%Y",
+                    date: {
+                      $toDate: "$employee.outDate",
+                    },
+                    timezone: "Asia/Jakarta",
+                  },
+                },
+              },
+            },
+            {
+              $match: {
+                usersRef: dataUsers._id,
+              },
             },
           ]);
         }
