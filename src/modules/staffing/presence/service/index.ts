@@ -154,6 +154,143 @@ class PresenceService {
     return data[0];
   };
 
+  getHistory = async () => {
+    const employeeRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
+      this.user.employee._id
+    );
+
+    const datas = await Absence.aggregate([
+      {
+        $lookup: {
+          from: "employee",
+          localField: "employeeRef",
+          foreignField: "_id",
+          as: "employee",
+        },
+      },
+      {
+        $unwind: "$employee",
+      },
+      {
+        $lookup: {
+          from: "schedule",
+          localField: "scheduleRef",
+          foreignField: "_id",
+          as: "schedule",
+        },
+      },
+      {
+        $unwind: "$schedule",
+      },
+      {
+        $project: {
+          employeeRef: 1,
+          dateSchedule: 1,
+          isWork: 1,
+          isPresent: 1,
+          entryTime: 1,
+          outTime: 1,
+          isTooLate: 1,
+          isEarlyHome: 1,
+          isLeave: 1,
+          isOvertime: 1,
+          totalHoursWorked: 1,
+          totalHoursReal: 1,
+          totalHoursLate: 1,
+          totalHoursEaryly: 1,
+          totalHoursOvertime: 1,
+          reasonLate: 1,
+          reasonEarly: 1,
+          isChangeSchedule: 1,
+          isHomeCare: 1,
+          isAgree: 1,
+          superiorsStatement: 1,
+          employeeStatement: 1,
+
+          "employee.name": 1,
+          "employee.fullName": 1,
+          "employee.gender": 1,
+          "employee.phoneNumber1": 1,
+          "employee.employeeNumber": 1,
+          "employee.numberIdentity": 1,
+          "employee.ktpAddress": 1,
+
+          "schedule.timeEntry": 1,
+          "schedule.timeOut": 1,
+          "schedule.typeSchedule": 1,
+          "schedule.delayTolerance": 1,
+
+          "typeAbsence.name": 1,
+        },
+      },
+      {
+        $addFields: {
+          "employee.gender": {
+            $cond: {
+              if: { $eq: ["$employee.gender", "L"] },
+              then: "laki-laki",
+              else: "perempuan",
+            },
+          },
+          dateSchedule: {
+            $dateToString: {
+              format: "%d/%m/%Y",
+              date: {
+                $toDate: "$dateSchedule",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+          totalHoursWorked: {
+            $dateToString: {
+              format: "%H:%M",
+              date: {
+                $toDate: "$totalHoursWorked",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+          "schedule.timeEntry": {
+            $dateToString: {
+              format: "%H:%M",
+              date: {
+                $toDate: "$schedule.timeEntry",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+          "schedule.timeOut": {
+            $dateToString: {
+              format: "%H:%M",
+              date: {
+                $toDate: "$schedule.timeOut",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+          "schedule.delayTolerance": {
+            $dateToString: {
+              format: "%M:%S",
+              date: {
+                $toDate: "$schedule.delayTolerance",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+        },
+      },
+      {
+        $match: {
+          employeeRef: employeeRef,
+        },
+      },
+      {
+        $limit: 1,
+      },
+    ]);
+    return datas;
+  };
+
   postCheckIn = async () => {
     const employeeRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
       this.user.employee._id

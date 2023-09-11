@@ -147,6 +147,7 @@ class RequestLeaveService {
 
           "typeLeave._id": 1,
           "typeLeave.name": 1,
+          "typeLeave.quantity": 1,
 
           "employee._id": 1,
           "employee.name": 1,
@@ -185,6 +186,17 @@ class RequestLeaveService {
       },
     ]);
     const getData = data[0];
+    const getStartDate = moment(startDateLeave, "DD/MM/YYYY");
+    const getEndDate = moment(endDateLeave, "DD/MM/YYYY");
+    const rangeDate = getEndDate.diff(getStartDate, "days");
+
+  
+    if (getData.ballance < rangeDate) {
+      return {
+        status: false,
+        message: "Saldo cuti anda tidak mencukupi",
+      };
+    }
 
     const getPicture = await Helper.uploadFile(
       "RequestLeave",
@@ -206,7 +218,11 @@ class RequestLeaveService {
       usersUpdate: this.user.usersRef,
     });
 
-    return setData;
+    return {
+      status: true,
+      message: "Berhasil insert data",
+      result: setData,
+    };
   };
 
   getHistory = async () => {
@@ -252,7 +268,7 @@ class RequestLeaveService {
           preserveNullAndEmptyArrays: true,
         },
       },
-  
+
       {
         $lookup: {
           from: "employee",

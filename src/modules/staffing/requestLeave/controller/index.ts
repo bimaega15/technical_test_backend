@@ -22,10 +22,13 @@ class RequestLeaveController implements IController {
     try {
       const services: RequestLeaveService = new RequestLeaveService(req);
       const data = await services.store();
+      if (data.status == false) {
+        return res.status(422).json({ message: data.message });
+      }
 
       return res
         .status(200)
-        .json({ message: "Berhasil insert data", result: data });
+        .json({ message: data.message, result: data.result });
     } catch (error: any) {
       return res
         .status(500)
@@ -46,7 +49,6 @@ class RequestLeaveController implements IController {
         .json({ message: "Terjadi kesalahan", result: error.message });
     }
   };
-
 }
 
 export default new RequestLeaveController();
