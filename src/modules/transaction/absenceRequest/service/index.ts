@@ -312,120 +312,33 @@ class AbsenceRequestService {
         },
       },
       {
-        $limit: 1
-      }
+        $limit: 1,
+      },
     ]);
     return data[0];
   };
 
   update = async () => {
-    const { leaveBallanceRef, startDateLeave, endDateLeave, picture } =
-      this.body;
+    const { id } = this.params;
+    const { employeeChangeRef, superiorRef, information } = this.body;
 
-    const getLeaveBallanceRef: mongoose.Types.ObjectId =
-      new mongoose.Types.ObjectId(leaveBallanceRef);
-
-    const data = await LeaveBallance.aggregate([
+    const data = await RequestLeave.updateOne(
+      { _id: id },
       {
-        $lookup: {
-          from: "typeLeave",
-          localField: "typeLeaveRef",
-          foreignField: "_id",
-          as: "typeLeave",
-        },
-      },
-      {
-        $unwind: "$typeLeave",
-      },
-      {
-        $lookup: {
-          from: "employee",
-          localField: "employeeRef",
-          foreignField: "_id",
-          as: "employee",
-        },
-      },
-      {
-        $unwind: "$employee",
-      },
-
-      {
-        $match: {
-          _id: getLeaveBallanceRef,
-          isActive: true,
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          earlyPeriod: 1,
-          endPeriod: 1,
-          ballance: 1,
-          isActive: 1,
-          clientRef: 1,
-
-          "typeLeave._id": 1,
-          "typeLeave.name": 1,
-
-          "employee._id": 1,
-          "employee.name": 1,
-          "employee.fullName": 1,
-          "employee.gender": 1,
-          "employee.phoneNumber1": 1,
-          "employee.employeeNumber": 1,
-          "employee.numberIdentity": 1,
-          "employee.ktpAddress": 1,
-        },
-      },
-      {
-        $addFields: {
-          earlyPeriod: {
-            $dateToString: {
-              format: "%d/%m/%Y",
-              date: {
-                $toDate: "$earlyPeriod",
-              },
-              timezone: "Asia/Jakarta",
-            },
-          },
-          endPeriod: {
-            $dateToString: {
-              format: "%d/%m/%Y",
-              date: {
-                $toDate: "$endPeriod",
-              },
-              timezone: "Asia/Jakarta",
-            },
-          },
-        },
-      },
-      {
-        $limit: 1,
-      },
-    ]);
-    const getData = data[0];
-
-    const getPicture = await Helper.uploadFile(
-      "RequestLeave",
-      picture,
-      "staffing/requestLeave",
-      null
+        employeeChangeRef,
+        superiorRef,
+        information,
+        usersUpdate: this.user.usersRef,
+      }
     );
+    return data;
+  };
 
-    const setData = await RequestLeave.create({
-      clientRef: getData.clientRef,
-      typeLeaveRef: getData.typeLeave._id,
-      employeeRef: getData.employee._id,
-      startDateLeave: Helper.convertDate(startDateLeave),
-      endDateLeave: Helper.convertDate(endDateLeave),
+  delete = async () => {
+    const { id } = this.params;
 
-      requestTime: moment().valueOf(),
-      picture: getPicture,
-      usersCreate: this.user.usersRef,
-      usersUpdate: this.user.usersRef,
-    });
-
-    return setData;
+    const data = await RequestLeave.deleteOne({ _id: id });
+    return data;
   };
 }
 

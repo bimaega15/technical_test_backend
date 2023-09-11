@@ -41,13 +41,25 @@ class AbsenceRequestController implements IController {
 
       return res
         .status(200)
-        .json({ message: "Berhasil insert data", result: data });
+        .json({ message: "Berhasil insert data", result: req.body });
     } catch (error: any) {
       return res
         .status(500)
         .json({ message: "Terjadi kesalahan", result: error.message });
     }
   };
- }
+  delete = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const services: AbsenceRequestService = new AbsenceRequestService(req);
+      await services.delete();
+
+      return res.status(200).json({ message: "Berhasil hapus data" });
+    } catch (error: any) {
+      return res
+        .status(500)
+        .json({ message: "Terjadi kesalahan", result: error.message });
+    }
+  };
+}
 
 export default new AbsenceRequestController();

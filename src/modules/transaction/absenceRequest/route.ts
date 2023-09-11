@@ -7,9 +7,11 @@ import validate from "./validation";
 class AbsenceRequestRoutes extends BaseRoutes {
   public routes(): void {
     this.router.use(verifyToken);
+
     this.router.get("/", AbsenceRequestController.index);
     this.router.get("/:id", AbsenceRequestController.show);
-    this.router.post("/", validate, AbsenceRequestController.update);
+    this.router.put("/:id", validate, AbsenceRequestController.update);
+    this.router.delete("/:id", AbsenceRequestController.delete);
   }
 }
 
