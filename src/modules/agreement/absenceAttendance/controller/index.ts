@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import IController from "../interface/index";
 
-import AbsenceRequestService from "../service";
+import AbsenceAttendanceService from "../service";
 
-class AbsenceRequestController implements IController {
+class AbsenceAttendanceController implements IController {
   index = async (req: Request, res: Response) => {
     try {
-      const services: AbsenceRequestService = new AbsenceRequestService(req);
+      const services: AbsenceAttendanceService = new AbsenceAttendanceService(req);
       const datas = await services.getAll();
 
       return res
@@ -21,7 +21,7 @@ class AbsenceRequestController implements IController {
 
   show = async (req: Request, res: Response) => {
     try {
-      const services: AbsenceRequestService = new AbsenceRequestService(req);
+      const services: AbsenceAttendanceService = new AbsenceAttendanceService(req);
       const data = await services.getOne();
 
       return res
@@ -36,7 +36,7 @@ class AbsenceRequestController implements IController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const services: AbsenceRequestService = new AbsenceRequestService(req);
+      const services: AbsenceAttendanceService = new AbsenceAttendanceService(req);
       const data = await services.update();
 
       return res
@@ -50,4 +50,4 @@ class AbsenceRequestController implements IController {
   };
 }
 
-export default new AbsenceRequestController();
+export default new AbsenceAttendanceController();

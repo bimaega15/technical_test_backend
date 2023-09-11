@@ -1,16 +1,16 @@
 import { verifyToken } from "../../../middleware/index";
 import BaseRoutes from "../../../routers/BaseRouter";
-import AbsenceRequestController from "./controller/index";
+import AbsenceAttendanceController from "./controller/index";
 
 // Controllers
-class AbsenceRequestRoutes extends BaseRoutes {
+class AbsenceAttendanceRoutes extends BaseRoutes {
   public routes(): void {
     this.router.use(verifyToken);
 
-    this.router.get("/", AbsenceRequestController.index);
-    this.router.get("/:id", AbsenceRequestController.show);
-    this.router.put("/:id", AbsenceRequestController.update);
+    this.router.get("/", AbsenceAttendanceController.index);
+    this.router.get("/:id", AbsenceAttendanceController.show);
+    this.router.put("/:id", AbsenceAttendanceController.update);
   }
 }
 
-export default new AbsenceRequestRoutes().router;
+export default new AbsenceAttendanceRoutes().router;

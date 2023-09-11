@@ -487,7 +487,6 @@ class AbsenceRequestService {
 
       await Absence.updateMany(
         {
-          isAgree: setIsAgree,
           employeeRef: refEmployee,
           dateSchedule: {
             $gt: Helper.convertDate(getStartDateLeave),
@@ -499,6 +498,7 @@ class AbsenceRequestService {
             isLeave: true,
             isChangeSchedule: true,
             replacementEmployee: employeeChangeRef,
+            isAgree: setIsAgree,
           },
         }
       );
