@@ -29,10 +29,12 @@ import employeeRoutes from "./modules/master/employee/route";
 import absenceRoutes from "./modules/transaction/absence/route";
 import leaveBallanceRoutes from "./modules/transaction/leaveBallance/route";
 import absenceRequestRoutes from "./modules/transaction/absenceRequest/route";
+import absenceAttendanceRoutes from "./modules/transaction/absenceAttendance/route";
 
 // for pegawai-execute
 import staffingRoutes from "./modules/staffing/presence/route";
 import staffingAbsenceRoutes from "./modules/staffing/requestLeave/route";
+import staffingAbsenceAttendanceRoutes from "./modules/staffing/absenceAttendance/route";
 
 // agreement
 import agreementAbsenceRoutes from "./modules/agreement/absenceRequest/route";
@@ -93,6 +95,7 @@ class App {
     this.app.use("/api/transaction/absence", absenceRoutes);
     this.app.use("/api/transaction/leaveBallance", leaveBallanceRoutes);
     this.app.use("/api/transaction/absenceRequest", absenceRequestRoutes);
+    this.app.use("/api/transaction/absenceAttendance", absenceAttendanceRoutes);
 
     // auth
     this.app.use("/api/auth", authRoutes);
@@ -100,6 +103,10 @@ class App {
     // staffing
     this.app.use("/api/staffing/presence", staffingRoutes);
     this.app.use("/api/staffing/absenceRequest", staffingAbsenceRoutes);
+    this.app.use(
+      "/api/staffing/absenceAttendance",
+      staffingAbsenceAttendanceRoutes
+    );
 
     // agreement
     this.app.use("/api/agreement/absenceRequest", agreementAbsenceRoutes);
