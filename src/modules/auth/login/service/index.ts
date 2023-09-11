@@ -62,6 +62,7 @@ class AuthService {
 
                 typeMapping: 1,
                 usersRef: 1,
+                usersMappingRef: 1,
 
                 "admin._id": 1,
                 "admin.name": 1,
@@ -132,6 +133,7 @@ class AuthService {
 
                 typeMapping: 1,
                 usersRef: 1,
+                usersMappingRef: 1,
 
                 "client._id": 1,
                 "client.name": 1,

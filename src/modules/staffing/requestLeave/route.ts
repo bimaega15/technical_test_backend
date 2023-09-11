@@ -5,7 +5,6 @@ import validate from "./validation";
 import { Request, Response, NextFunction } from "express";
 import formidable from "formidable";
 
-
 const formData = (req: Request, res: Response, next: NextFunction) => {
   const form = formidable({});
   form.parse(req, (err, fields: any, files: any) => {
