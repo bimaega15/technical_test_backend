@@ -28,6 +28,7 @@ import employeeRoutes from "./modules/master/employee/route";
 // for data-pegawai
 import absenceRoutes from "./modules/transaction/absence/route";
 import leaveBallanceRoutes from "./modules/transaction/leaveBallance/route";
+import absenceRequestRoutes from "./modules/transaction/absenceRequest/route";
 
 // for pegawai-execute
 import staffingRoutes from "./modules/staffing/presence/route";
@@ -88,7 +89,7 @@ class App {
     // transaction
     this.app.use("/api/transaction/absence", absenceRoutes);
     this.app.use("/api/transaction/leaveBallance", leaveBallanceRoutes);
-    this.app.use("/api/transaction/absenceRequest", staffingAbsenceRoutes);
+    this.app.use("/api/transaction/absenceRequest", absenceRequestRoutes);
 
     // auth
     this.app.use("/api/auth", authRoutes);

@@ -37,8 +37,6 @@ class RequestLeaveRoutes extends BaseRoutes {
     this.router.get("/", RequestLeaveController.index);
     this.router.post("/", formData, validate, RequestLeaveController.create);
     this.router.get("/history", RequestLeaveController.history);
-    this.router.put("/:id", formData, validate, RequestLeaveController.update);
-    this.router.delete("/:id", RequestLeaveController.delete);
   }
 }
 

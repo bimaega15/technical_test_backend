@@ -358,40 +358,6 @@ class RequestLeaveService {
 
     return datas;
   };
-
-  update = async () => {
-    const { id } = this.params;
-    const { typeLeaveRef, employeeRef, earlyPeriod, endPeriod, isActive } =
-      this.body;
-
-    const getTypeLeave: any = await TypeLeave.findOne({
-      _id: typeLeaveRef,
-    });
-
-    let setIsActive =
-      isActive != undefined ? (isActive == 1 ? true : false) : false;
-    const data = await RequestLeave.updateOne(
-      { _id: id },
-      {
-        clientRef: this.user.usersMappingRef,
-        typeLeaveRef,
-        employeeRef,
-        earlyPeriod: Helper.convertDate(earlyPeriod),
-        endPeriod: Helper.convertDate(endPeriod),
-        ballance: getTypeLeave.quantity,
-        isActive: setIsActive,
-        usersUpdate: this.user.usersRef,
-      }
-    );
-    return data;
-  };
-
-  delete = async () => {
-    const { id } = this.params;
-
-    const data = await RequestLeave.deleteOne({ _id: id });
-    return data;
-  };
 }
 
 export default RequestLeaveService;
