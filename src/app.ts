@@ -34,6 +34,9 @@ import absenceRequestRoutes from "./modules/transaction/absenceRequest/route";
 import staffingRoutes from "./modules/staffing/presence/route";
 import staffingAbsenceRoutes from "./modules/staffing/requestLeave/route";
 
+// agreement
+import agreementAbsenceRoutes from "./modules/agreement/absenceRequest/route";
+
 class App {
   public app: Application;
 
@@ -97,6 +100,9 @@ class App {
     // staffing
     this.app.use("/api/staffing/presence", staffingRoutes);
     this.app.use("/api/staffing/absenceRequest", staffingAbsenceRoutes);
+
+    // agreement
+    this.app.use("/api/agreement/absenceRequest", agreementAbsenceRoutes);
 
     this.app.use(function (req, res, next) {
       next(createError(404));

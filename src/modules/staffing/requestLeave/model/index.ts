@@ -9,7 +9,7 @@ const schema = new Schema(
     typeLeaveRef: {
       type: Types.ObjectId,
       ref: "TypeLeave",
-    }, 
+    },
     employeeRef: {
       type: Types.ObjectId,
       ref: "Employee",

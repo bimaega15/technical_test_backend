@@ -45,6 +45,34 @@ class AbsenceService {
         $unwind: "$schedule",
       },
       {
+        $lookup: {
+          from: "employee",
+          localField: "replacementEmployee",
+          foreignField: "_id",
+          as: "replacementEmployee",
+        },
+      },
+      {
+        $unwind: {
+          path: "$replacementEmployee",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "typeAbsence",
+          localField: "typeAbsenceRef",
+          foreignField: "_id",
+          as: "typeAbsence",
+        },
+      },
+      {
+        $unwind: {
+          path: "$typeAbsence",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
         $project: {
           clientRef: 1,
           dateSchedule: 1,
@@ -76,6 +104,14 @@ class AbsenceService {
           "employee.employeeNumber": 1,
           "employee.numberIdentity": 1,
           "employee.ktpAddress": 1,
+
+          "replacementEmployee.name": 1,
+          "replacementEmployee.fullName": 1,
+          "replacementEmployee.gender": 1,
+          "replacementEmployee.phoneNumber1": 1,
+          "replacementEmployee.employeeNumber": 1,
+          "replacementEmployee.numberIdentity": 1,
+          "replacementEmployee.ktpAddress": 1,
 
           "schedule.timeEntry": 1,
           "schedule.timeOut": 1,
