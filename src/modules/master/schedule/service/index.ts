@@ -16,7 +16,7 @@ class ScheduleService {
 
   getAll = async () => {
     const clientRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
-      this.user.usersRef
+      this.user.usersMappingRef
     );
     const datas = await Schedule.aggregate([
       {
@@ -74,7 +74,7 @@ class ScheduleService {
       isActive != undefined ? (isActive == 1 ? true : false) : false;
 
     const data = await Schedule.create({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       timeEntry: moment(timeEntry, "HH:mm").valueOf(),
       timeOut: moment(timeOut, "HH:mm").valueOf(),
       delayTolerance: moment(delayTolerance, "mm:ss").valueOf(),
@@ -89,7 +89,7 @@ class ScheduleService {
   getOne = async () => {
     const { id } = this.params;
     const clientRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
-      this.user.usersRef
+      this.user.usersMappingRef
     );
     const data = await Schedule.aggregate([
       {
@@ -144,7 +144,7 @@ class ScheduleService {
     const data = await Schedule.updateOne(
       { _id: id },
       {
-        clientRef: this.user.usersRef,
+        clientRef: this.user.usersMappingRef,
         timeEntry: moment(timeEntry, "HH:mm").valueOf(),
         timeOut: moment(timeOut, "HH:mm").valueOf(),
         delayTolerance: moment(delayTolerance, "mm:ss").valueOf(),

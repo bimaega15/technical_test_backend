@@ -1,10 +1,12 @@
 import { Request } from "express";
-import LeaveBallance from "../model";
+import RequestLeave from "../model";
 import mongoose from "mongoose";
 import Helper from "../../../../utils/Helper";
 import TypeLeave from "../../../master/typeLeave/model/index";
+import moment from "moment";
+import LeaveBallance from "../../../transaction/leaveBallance/model/index";
 
-class LeaveBallanceService {
+class RequestLeaveService {
   body: Request["body"];
   params: Request["params"];
   user: any;
@@ -15,10 +17,11 @@ class LeaveBallanceService {
     this.user = req.user;
   }
 
-  getAll = async () => {
-    const clientRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
-      this.user.usersRef
+  getLeaveBallance = async () => {
+    const employeeRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
+      this.user.usersMappingRef
     );
+
     const datas = await LeaveBallance.aggregate([
       {
         $lookup: {
@@ -45,21 +48,22 @@ class LeaveBallanceService {
 
       {
         $match: {
-          clientRef: clientRef,
+          employeeRef: employeeRef,
           isActive: true,
         },
       },
       {
         $project: {
           _id: 1,
-          clientRef: 1,
           earlyPeriod: 1,
           endPeriod: 1,
           ballance: 1,
           isActive: 1,
 
+          "typeLeave._id": 1,
           "typeLeave.name": 1,
 
+          "employee._id": 1,
           "employee.name": 1,
           "employee.fullName": 1,
           "employee.gender": 1,
@@ -96,34 +100,11 @@ class LeaveBallanceService {
   };
 
   store = async () => {
-    const { typeLeaveRef, employeeRef, earlyPeriod, endPeriod, isActive } =
+    const { leaveBallanceRef, startDateLeave, endDateLeave, picture } =
       this.body;
 
-    const getTypeLeave: any = await TypeLeave.findOne({
-      _id: typeLeaveRef,
-    });
-
-    let setIsActive =
-      isActive != undefined ? (isActive == 1 ? true : false) : false;
-
-    const data = await LeaveBallance.create({
-      clientRef: this.user.usersRef,
-      typeLeaveRef,
-      employeeRef,
-      earlyPeriod: Helper.convertDate(earlyPeriod),
-      endPeriod: Helper.convertDate(endPeriod),
-      ballance: getTypeLeave.quantity,
-      isActive: setIsActive,
-      usersCreate: this.user.usersRef,
-      usersUpdate: this.user.usersRef,
-    });
-
-    return data;
-  };
-
-  getOne = async () => {
-    const { id } = this.params;
-    const refId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(id);
+    const getLeaveBallanceRef: mongoose.Types.ObjectId =
+      new mongoose.Types.ObjectId(leaveBallanceRef);
 
     const data = await LeaveBallance.aggregate([
       {
@@ -151,20 +132,23 @@ class LeaveBallanceService {
 
       {
         $match: {
-          _id: refId,
+          _id: getLeaveBallanceRef,
+          isActive: true,
         },
       },
       {
         $project: {
           _id: 1,
-          clientRef: 1,
           earlyPeriod: 1,
           endPeriod: 1,
           ballance: 1,
           isActive: 1,
+          clientRef: 1,
 
+          "typeLeave._id": 1,
           "typeLeave.name": 1,
 
+          "employee._id": 1,
           "employee.name": 1,
           "employee.fullName": 1,
           "employee.gender": 1,
@@ -200,8 +184,179 @@ class LeaveBallanceService {
         $limit: 1,
       },
     ]);
+    const getData = data[0];
 
-    return data[0];
+    const getPicture = await Helper.uploadFile(
+      "RequestLeave",
+      picture,
+      "staffing/requestLeave",
+      null
+    );
+
+    const setData = await RequestLeave.create({
+      clientRef: getData.clientRef,
+      typeLeaveRef: getData.typeLeave._id,
+      employeeRef: getData.employee._id,
+      startDateLeave: Helper.convertDate(startDateLeave),
+      endDateLeave: Helper.convertDate(endDateLeave),
+
+      requestTime: moment().valueOf(),
+      picture: getPicture,
+      usersCreate: this.user.usersRef,
+      usersUpdate: this.user.usersRef,
+    });
+
+    return setData;
+  };
+
+  getHistory = async () => {
+    const employeeRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
+      this.user.usersMappingRef
+    );
+
+    const datas = await RequestLeave.aggregate([
+      {
+        $lookup: {
+          from: "employee",
+          localField: "employeeRef",
+          foreignField: "_id",
+          as: "employee",
+        },
+      },
+      {
+        $unwind: "$employee",
+      },
+      {
+        $lookup: {
+          from: "typeLeave",
+          localField: "typeLeaveRef",
+          foreignField: "_id",
+          as: "typeLeave",
+        },
+      },
+      {
+        $unwind: "$typeLeave",
+      },
+
+      {
+        $lookup: {
+          from: "employee",
+          localField: "employeeChangeRef",
+          foreignField: "_id",
+          as: "employeeChangeRef",
+        },
+      },
+      {
+        $unwind: {
+          path: "$employeeChangeRef",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+  
+      {
+        $lookup: {
+          from: "employee",
+          localField: "superiorRef",
+          foreignField: "_id",
+          as: "superiorRef",
+        },
+      },
+      {
+        $unwind: {
+          path: "$superiorRef",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      {
+        $match: {
+          employeeRef: employeeRef,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          clientRef: 1,
+
+          startDateLeave: 1,
+          endDateLeave: 1,
+          information: 1,
+          isAgree: 1,
+          requestTime: 1,
+          agreeTime: 1,
+          picture: 1,
+
+          "typeLeave.name": 1,
+          "typeLeave.quantity": 1,
+
+          "employee.name": 1,
+          "employee.fullName": 1,
+          "employee.gender": 1,
+          "employee.phoneNumber1": 1,
+          "employee.employeeNumber": 1,
+          "employee.numberIdentity": 1,
+          "employee.ktpAddress": 1,
+
+          "employeeChangeRef.name": 1,
+          "employeeChangeRef.fullName": 1,
+          "employeeChangeRef.gender": 1,
+          "employeeChangeRef.phoneNumber1": 1,
+          "employeeChangeRef.employeeNumber": 1,
+          "employeeChangeRef.numberIdentity": 1,
+          "employeeChangeRef.ktpAddress": 1,
+
+          "superiorRef.name": 1,
+          "superiorRef.fullName": 1,
+          "superiorRef.gender": 1,
+          "superiorRef.phoneNumber1": 1,
+          "superiorRef.employeeNumber": 1,
+          "superiorRef.numberIdentity": 1,
+          "superiorRef.ktpAddress": 1,
+        },
+      },
+      {
+        $addFields: {
+          startDateLeave: {
+            $dateToString: {
+              format: "%d/%m/%Y",
+              date: {
+                $toDate: "$startDateLeave",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+          endDateLeave: {
+            $dateToString: {
+              format: "%d/%m/%Y",
+              date: {
+                $toDate: "$endDateLeave",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+          requestTime: {
+            $dateToString: {
+              format: "%d/%m/%Y %H:%M",
+              date: {
+                $toDate: "$requestTime",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+          agreeTime: {
+            $dateToString: {
+              format: "%d/%m/%Y %H:%M",
+              date: {
+                $toDate: "$agreeTime",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
+        },
+      },
+    ]);
+
+    return datas;
   };
 
   update = async () => {
@@ -215,15 +370,15 @@ class LeaveBallanceService {
 
     let setIsActive =
       isActive != undefined ? (isActive == 1 ? true : false) : false;
-    const data = await LeaveBallance.updateOne(
+    const data = await RequestLeave.updateOne(
       { _id: id },
       {
-        clientRef: this.user.usersRef,
+        clientRef: this.user.usersMappingRef,
         typeLeaveRef,
         employeeRef,
         earlyPeriod: Helper.convertDate(earlyPeriod),
         endPeriod: Helper.convertDate(endPeriod),
-        ballance:  getTypeLeave.quantity,
+        ballance: getTypeLeave.quantity,
         isActive: setIsActive,
         usersUpdate: this.user.usersRef,
       }
@@ -234,9 +389,9 @@ class LeaveBallanceService {
   delete = async () => {
     const { id } = this.params;
 
-    const data = await LeaveBallance.deleteOne({ _id: id });
+    const data = await RequestLeave.deleteOne({ _id: id });
     return data;
   };
 }
 
-export default LeaveBallanceService;
+export default RequestLeaveService;

@@ -9,7 +9,7 @@ const schema = new Schema(
     typeLeaveRef: {
       type: Types.ObjectId,
       ref: "TypeLeave",
-    },
+    }, 
     employeeRef: {
       type: Types.ObjectId,
       ref: "Employee",
@@ -28,7 +28,7 @@ const schema = new Schema(
     isAgree: Boolean,
     requestTime: Date,
     agreeTime: Date,
-    document: String,
+    picture: String,
     usersCreate: {
       type: Types.ObjectId,
       ref: "Users",

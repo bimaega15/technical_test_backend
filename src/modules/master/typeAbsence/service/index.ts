@@ -14,7 +14,7 @@ class TypeAbsenceService {
 
   getAll = async () => {
     const datas = await TypeAbsence.find({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       isActive: true,
     });
     return datas;
@@ -25,7 +25,7 @@ class TypeAbsenceService {
     let setIsActive =
       isActive != undefined ? (isActive == 1 ? true : false) : false;
     const data = await TypeAbsence.create({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       name,
       isActive: setIsActive,
       usersCreate: this.user.usersRef,
@@ -53,7 +53,7 @@ class TypeAbsenceService {
     const data = await TypeAbsence.updateOne(
       { _id: id },
       {
-        clientRef: this.user.usersRef,
+        clientRef: this.user.usersMappingRef,
         name,
         isActive: setIsActive,
         usersUpdate: this.user.usersRef,

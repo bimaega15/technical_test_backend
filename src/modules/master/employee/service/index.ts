@@ -19,7 +19,7 @@ class EmployeeService {
 
   getAll = async () => {
     const clientRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
-      this.user.usersRef
+      this.user.usersMappingRef
     );
 
     const datas = await UsersMapping.aggregate([
@@ -142,7 +142,7 @@ class EmployeeService {
     );
 
     const dataEmployee = await Employee.create({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       name,
       typeIdentity,
       numberIdentity,

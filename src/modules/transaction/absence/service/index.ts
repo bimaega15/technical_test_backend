@@ -18,7 +18,7 @@ class AbsenceService {
 
   getAll = async () => {
     const clientRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
-      this.user.usersRef
+      this.user.usersMappingRef
     );
 
     const datas = await Absence.aggregate([
@@ -203,7 +203,7 @@ class AbsenceService {
       });
       if (checkAbsence == 0) {
         pushData.push({
-          clientRef: this.user.usersRef,
+          clientRef: this.user.usersMappingRef,
           employeeRef,
           scheduleRef,
           dateSchedule: Helper.convertDate(date.format("DD/MM/YYYY")),
@@ -410,7 +410,7 @@ class AbsenceService {
       });
       if (checkAbsence == 0) {
         await Absence.create({
-          clientRef: this.user.usersRef,
+          clientRef: this.user.usersMappingRef,
           employeeRef,
           scheduleRef,
           dateSchedule: Helper.convertDate(date.format("DD/MM/YYYY")),
@@ -426,7 +426,7 @@ class AbsenceService {
         const data = await Absence.updateOne(
           { _id: getAbsence._id },
           {
-            clientRef: this.user.usersRef,
+            clientRef: this.user.usersMappingRef,
             employeeRef,
             scheduleRef,
             dateSchedule: Helper.convertDate(date.format("DD/MM/YYYY")),

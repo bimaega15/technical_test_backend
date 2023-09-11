@@ -326,6 +326,7 @@ class PresenceService {
 
     let startTimeIn = getData.schedule.timeEntry;
     let endTimeOut = getData.schedule.timeOut;
+
     let tollerance = moment(getData.schedule.delayTolerance, "mm:ss").format(
       "mm"
     );

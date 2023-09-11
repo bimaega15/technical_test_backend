@@ -31,6 +31,7 @@ import leaveBallanceRoutes from "./modules/transaction/leaveBallance/route";
 
 // for pegawai-execute
 import staffingRoutes from "./modules/staffing/presence/route";
+import staffingAbsenceRoutes from "./modules/staffing/requestLeave/route";
 
 class App {
   public app: Application;
@@ -87,12 +88,14 @@ class App {
     // transaction
     this.app.use("/api/transaction/absence", absenceRoutes);
     this.app.use("/api/transaction/leaveBallance", leaveBallanceRoutes);
+    this.app.use("/api/transaction/absenceRequest", staffingAbsenceRoutes);
 
     // auth
     this.app.use("/api/auth", authRoutes);
 
     // staffing
     this.app.use("/api/staffing/presence", staffingRoutes);
+    this.app.use("/api/staffing/absenceRequest", staffingAbsenceRoutes);
 
     this.app.use(function (req, res, next) {
       next(createError(404));

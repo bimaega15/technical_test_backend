@@ -14,7 +14,7 @@ class TypeLeaveService {
 
   getAll = async () => {
     const datas = await TypeLeave.find({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       isActive: true,
     });
     return datas;
@@ -26,7 +26,7 @@ class TypeLeaveService {
     let setIsActive =
       isActive != undefined ? (isActive == 1 ? true : false) : false;
     const data = await TypeLeave.create({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       name,
       quantity,
       isActive: setIsActive,
@@ -55,7 +55,7 @@ class TypeLeaveService {
     const data = await TypeLeave.updateOne(
       { _id: id },
       {
-        clientRef: this.user.usersRef,
+        clientRef: this.user.usersMappingRef,
         name,
         quantity,
         isActive: setIsActive,

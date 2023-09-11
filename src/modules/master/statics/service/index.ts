@@ -14,7 +14,7 @@ class StaticsService {
 
   getAll = async () => {
     const datas = await Statics.find({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       isActive: true,
     });
     return datas;
@@ -26,7 +26,7 @@ class StaticsService {
       isActive != undefined ? (isActive == 1 ? true : false) : false;
 
     const data = await Statics.create({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       name,
       staticType,
       isActive: setIsActive,
@@ -51,7 +51,7 @@ class StaticsService {
       isActive != undefined ? (isActive == 1 ? true : false) : false;
     const data = await Statics.updateOne(
       { _id: id },
-      { clientRef: this.user.usersRef, name, staticType, isActive: setIsActive }
+      { clientRef: this.user.usersMappingRef, name, staticType, isActive: setIsActive }
     );
     return data;
   };

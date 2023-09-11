@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import IController from "../interface/index";
 
-import LeaveBallanceService from "../service";
+import RequestLeaveService from "../service";
 
-class LeaveBallanceController implements IController {
+class RequestLeaveController implements IController {
   index = async (req: Request, res: Response) => {
     try {
-      const services: LeaveBallanceService = new LeaveBallanceService(req);
-      const datas = await services.getAll();
+      const services: RequestLeaveService = new RequestLeaveService(req);
+      const datas = await services.getLeaveBallance();
 
       return res
         .status(200)
@@ -20,7 +20,7 @@ class LeaveBallanceController implements IController {
   };
   create = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const services: LeaveBallanceService = new LeaveBallanceService(req);
+      const services: RequestLeaveService = new RequestLeaveService(req);
       const data = await services.store();
 
       return res
@@ -32,10 +32,10 @@ class LeaveBallanceController implements IController {
         .json({ message: "Terjadi kesalahan", result: error.message });
     }
   };
-  show = async (req: Request, res: Response): Promise<Response> => {
+  history = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const services: LeaveBallanceService = new LeaveBallanceService(req);
-      const data = await services.getOne();
+      const services: RequestLeaveService = new RequestLeaveService(req);
+      const data = await services.getHistory();
 
       return res
         .status(200)
@@ -48,7 +48,7 @@ class LeaveBallanceController implements IController {
   };
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const services: LeaveBallanceService = new LeaveBallanceService(req);
+      const services: RequestLeaveService = new RequestLeaveService(req);
       await services.update();
 
       return res
@@ -62,7 +62,7 @@ class LeaveBallanceController implements IController {
   };
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const services: LeaveBallanceService = new LeaveBallanceService(req);
+      const services: RequestLeaveService = new RequestLeaveService(req);
       await services.delete();
 
       return res.status(200).json({ message: "Berhasil hapus data" });
@@ -74,4 +74,4 @@ class LeaveBallanceController implements IController {
   };
 }
 
-export default new LeaveBallanceController();
+export default new RequestLeaveController();

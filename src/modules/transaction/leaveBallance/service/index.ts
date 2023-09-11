@@ -16,8 +16,9 @@ class LeaveBallanceService {
   }
 
   getAll = async () => {
+    
     const clientRef: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
-      this.user.usersRef
+      this.user.usersMappingRef
     );
     const datas = await LeaveBallance.aggregate([
       {
@@ -107,7 +108,7 @@ class LeaveBallanceService {
       isActive != undefined ? (isActive == 1 ? true : false) : false;
 
     const data = await LeaveBallance.create({
-      clientRef: this.user.usersRef,
+      clientRef: this.user.usersMappingRef,
       typeLeaveRef,
       employeeRef,
       earlyPeriod: Helper.convertDate(earlyPeriod),
@@ -218,7 +219,7 @@ class LeaveBallanceService {
     const data = await LeaveBallance.updateOne(
       { _id: id },
       {
-        clientRef: this.user.usersRef,
+        clientRef: this.user.usersMappingRef,
         typeLeaveRef,
         employeeRef,
         earlyPeriod: Helper.convertDate(earlyPeriod),
