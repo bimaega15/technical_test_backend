@@ -21,7 +21,28 @@ class PresenceController implements IController {
   checkIn = async (req: Request, res: Response) => {
     try {
       const services: PresenceService = new PresenceService(req);
-      const data = await services.postCheckIn();
+      const data: any = await services.postCheckIn();
+
+      if (data.status == false) {
+        return res.status(422).json({
+          message: data.message,
+        });
+      }
+
+      return res
+        .status(200)
+        .json({ message: data.message, result: data.result });
+    } catch (error: any) {
+      return res
+        .status(500)
+        .json({ message: "Terjadi kesalahan", result: error.message });
+    }
+  };
+  
+  checkOut = async (req: Request, res: Response) => {
+    try {
+      const services: PresenceService = new PresenceService(req);
+      const data: any = await services.postCheckOut();
 
       if (data.status == false) {
         return res.status(422).json({

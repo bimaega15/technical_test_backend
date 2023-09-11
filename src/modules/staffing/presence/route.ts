@@ -9,6 +9,7 @@ class PresenceRoutes extends BaseRoutes {
 
     this.router.get("/", PresenceController.index);
     this.router.post("/checkIn", PresenceController.checkIn);
+    this.router.post("/checkOut", PresenceController.checkOut);
   }
 }
 
