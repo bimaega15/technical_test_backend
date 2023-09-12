@@ -1,4 +1,4 @@
-import { verifyToken } from "../../../middleware/index";
+import { verifyToken, gate } from "../../../middleware/index";
 import BaseRoutes from "../../../routers/BaseRouter";
 import LeaveBallanceController from "./controller/index";
 import validate from "./validation";
@@ -8,6 +8,9 @@ import validate from "./validation";
 class LeaveBallanceRoutes extends BaseRoutes {
   public routes(): void {
     this.router.use(verifyToken);
+    this.router.use(gate(["client"]));
+
+
     this.router.get("/", LeaveBallanceController.index);
     this.router.post("/", validate, LeaveBallanceController.create);
     this.router.get("/:id", LeaveBallanceController.show);

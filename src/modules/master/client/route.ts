@@ -1,4 +1,4 @@
-import { verifyToken } from "../../../middleware/index";
+import { verifyToken, gate } from "../../../middleware/index";
 import BaseRoutes from "../../../routers/BaseRouter";
 import ClientController from "./controller/index";
 import { validateStore, validateUpdate } from "./validation";
@@ -8,6 +8,8 @@ import { validateStore, validateUpdate } from "./validation";
 class ClientRoutes extends BaseRoutes {
   public routes(): void {
     this.router.use(verifyToken);
+    this.router.use(gate(["admin"]));
+
     this.router.get("/", ClientController.index);
     this.router.post("/", validateStore, ClientController.create);
     this.router.get("/:id", ClientController.show);

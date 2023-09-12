@@ -442,30 +442,27 @@ class AbsenceAttendanceService {
     let setIsAgree =
       isAgree != undefined ? (isAgree == 1 ? true : false) : false;
 
-    if (setIsAgree) {
-      let getRequestDate = getData.requestDate;
-      let employeeChangeRef = getData.employeeChangeRef._id;
-      let employeeRef = getData.employee._id;
-      const refEmployee: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
-        employeeRef
-      );
+    let getRequestDate = getData.requestDate;
+    let employeeChangeRef = getData.employeeChangeRef._id;
+    let employeeRef = getData.employee._id;
+    const refEmployee: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
+      employeeRef
+    );
 
-
-      await Absence.updateOne(
-        {
-          employeeRef: refEmployee,
-          dateSchedule: Helper.convertDate(getRequestDate),
+    await Absence.updateOne(
+      {
+        employeeRef: refEmployee,
+        dateSchedule: Helper.convertDate(getRequestDate),
+      },
+      {
+        $set: {
+          isChangeSchedule: true,
+          replacementEmployee: employeeChangeRef,
+          typeAbsenceRef: getData.typeAbsenceRef,
+          isAgree: setIsAgree,
         },
-        {
-          $set: {
-            isChangeSchedule: true,
-            replacementEmployee: employeeChangeRef,
-            typeAbsenceRef: getData.typeAbsenceRef,
-            isAgree: setIsAgree,
-          },
-        }
-      );
-    }
+      }
+    );
 
     const dataUpdate = await RequestAttendance.updateOne(
       { _id: id },

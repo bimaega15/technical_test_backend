@@ -1,4 +1,4 @@
-import { verifyToken } from "../../../middleware/index";
+import { verifyToken, gate} from "../../../middleware/index";
 import BaseRoutes from "../../../routers/BaseRouter";
 import RequestAttendance from "./controller/index";
 import validate from "./validation";
@@ -34,6 +34,8 @@ const formData = (req: Request, res: Response, next: NextFunction) => {
 class RequestAttendanceRoutes extends BaseRoutes {
   public routes(): void {
     this.router.use(verifyToken);
+    this.router.use(gate(["employee"]));
+
     this.router.get("/", RequestAttendance.index);
     this.router.post("/", formData, validate, RequestAttendance.create);
   }

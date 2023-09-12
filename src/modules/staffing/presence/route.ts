@@ -1,4 +1,4 @@
-import { verifyToken } from "../../../middleware/index";
+import { verifyToken, gate } from "../../../middleware/index";
 import BaseRoutes from "../../../routers/BaseRouter";
 import PresenceController from "./controller/index";
 
@@ -6,6 +6,7 @@ import PresenceController from "./controller/index";
 class PresenceRoutes extends BaseRoutes {
   public routes(): void {
     this.router.use(verifyToken);
+    this.router.use(gate(["employee"]));
 
     this.router.get("/", PresenceController.index);
     this.router.post("/checkIn", PresenceController.checkIn);

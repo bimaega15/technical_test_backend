@@ -476,33 +476,31 @@ class AbsenceRequestService {
     let setIsAgree =
       isAgree != undefined ? (isAgree == 1 ? true : false) : false;
 
-    if (setIsAgree) {
-      let getStartDateLeave = getData.startDateLeave;
-      let getEndDateLeave = getData.endDateLeave;
-      let employeeChangeRef = getData.employeeChangeRef._id;
-      let employeeRef = getData.employee._id;
-      const refEmployee: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
-        employeeRef
-      );
+    let getStartDateLeave = getData.startDateLeave;
+    let getEndDateLeave = getData.endDateLeave;
+    let employeeChangeRef = getData.employeeChangeRef._id;
+    let employeeRef = getData.employee._id;
+    const refEmployee: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(
+      employeeRef
+    );
 
-      await Absence.updateMany(
-        {
-          employeeRef: refEmployee,
-          dateSchedule: {
-            $gt: Helper.convertDate(getStartDateLeave),
-            $lte: Helper.convertDate(getEndDateLeave),
-          },
+    await Absence.updateMany(
+      {
+        employeeRef: refEmployee,
+        dateSchedule: {
+          $gt: Helper.convertDate(getStartDateLeave),
+          $lte: Helper.convertDate(getEndDateLeave),
         },
-        {
-          $set: {
-            isLeave: true,
-            isChangeSchedule: true,
-            replacementEmployee: employeeChangeRef,
-            isAgree: setIsAgree,
-          },
-        }
-      );
-    }
+      },
+      {
+        $set: {
+          isLeave: true,
+          isChangeSchedule: true,
+          replacementEmployee: employeeChangeRef,
+          isAgree: setIsAgree,
+        },
+      }
+    );
 
     const dataUpdate = await RequestLeave.updateOne(
       { _id: id },

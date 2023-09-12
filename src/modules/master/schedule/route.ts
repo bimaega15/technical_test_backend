@@ -1,4 +1,4 @@
-import { verifyToken } from "../../../middleware/index";
+import { verifyToken, gate } from "../../../middleware/index";
 import BaseRoutes from "../../../routers/BaseRouter";
 import ScheduleController from "./controller/index";
 import validate from "./validation";
@@ -8,6 +8,8 @@ import validate from "./validation";
 class ScheduleRoutes extends BaseRoutes {
   public routes(): void {
     this.router.use(verifyToken);
+    this.router.use(gate(["client"]));
+
     this.router.get("/", ScheduleController.index);
     this.router.post("/", validate, ScheduleController.create);
     this.router.get("/:id", ScheduleController.show);

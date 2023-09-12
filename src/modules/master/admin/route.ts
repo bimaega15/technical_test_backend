@@ -3,6 +3,7 @@ import BaseRoutes from "../../../routers/BaseRouter";
 import { Request, Response, NextFunction } from "express";
 import AdminController from "./controller/index";
 import { validateStore, validateUpdate } from "./validation";
+import { gate } from "../../../middleware/index";
 
 // Controllers
 

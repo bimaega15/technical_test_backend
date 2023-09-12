@@ -3,7 +3,7 @@ import BaseRoutes from "../../../routers/BaseRouter";
 import { Request, Response, NextFunction } from "express";
 import EmployeeController from "./controller/index";
 import { validateStore, validateUpdate } from "./validation";
-import { verifyToken } from "../../../middleware/index";
+import { verifyToken, gate } from "../../../middleware/index";
 
 // Controllers
 
@@ -35,6 +35,8 @@ const formData = (req: Request, res: Response, next: NextFunction) => {
 class EmployeeRoutes extends BaseRoutes {
   public routes(): void {
     this.router.use(verifyToken);
+    this.router.use(gate(["client"]));
+
 
     this.router.get("/", EmployeeController.index);
     this.router.post("/", formData, validateStore, EmployeeController.create);
