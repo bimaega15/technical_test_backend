@@ -10,6 +10,8 @@ import createError from "http-errors";
 import { development } from "./config/database";
 import mongoose, { ConnectOptions } from "mongoose";
 import momentTimezone from "moment-timezone";
+import axios from "axios";
+import cron from "node-cron";
 
 // for admin
 import adminRoutes from "./modules/master/admin/route";
@@ -55,6 +57,7 @@ class App {
     this.connectDb();
     this.routes();
     dotenv();
+    this.functionNeed();
   }
 
   protected plugins(): void {
@@ -148,6 +151,22 @@ class App {
       res.render("error");
     });
   }
+
+  protected functionNeed = () => {
+    try {
+      const scheduledJob = async () => {
+        const uriEnv = process.env.URI_DEVELOPMENT;
+        await axios.post(`${uriEnv}/api/executeAbsence`);
+        console.log("API Success Execute Absence");
+      };
+
+      cron.schedule("0 0 * * *", async () => {
+        await scheduledJob();
+      });
+    } catch (error: any) {
+      console.error("Error calling API:", error.message);
+    }
+  };
 }
 
 const app = new App().app;
