@@ -54,6 +54,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "mongoose": "^7.5.0",
-    "mv": "^2.1.1"
+    "mv": "^2.1.1",
+    "regex-escape": "^3.4.10"
   }
 }
