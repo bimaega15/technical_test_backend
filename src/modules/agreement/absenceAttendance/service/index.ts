@@ -372,9 +372,11 @@ class AbsenceAttendanceService {
           requestTime: 1,
           agreeTime: 1,
           picture: 1,
+          typeAbsenceRef: 1,
 
           "typeAbsence.name": 1,
 
+          "employee._id": 1,
           "employee.name": 1,
           "employee.fullName": 1,
           "employee.gender": 1,
@@ -383,6 +385,7 @@ class AbsenceAttendanceService {
           "employee.numberIdentity": 1,
           "employee.ktpAddress": 1,
 
+          "employeeChangeRef._id": 1,
           "employeeChangeRef.name": 1,
           "employeeChangeRef.fullName": 1,
           "employeeChangeRef.gender": 1,
@@ -447,10 +450,11 @@ class AbsenceAttendanceService {
         employeeRef
       );
 
-      await Absence.updateMany(
+
+      await Absence.updateOne(
         {
           employeeRef: refEmployee,
-          dateSchedule: getRequestDate,
+          dateSchedule: Helper.convertDate(getRequestDate),
         },
         {
           $set: {

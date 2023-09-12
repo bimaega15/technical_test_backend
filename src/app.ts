@@ -40,6 +40,9 @@ import staffingAbsenceAttendanceRoutes from "./modules/staffing/absenceAttendanc
 import agreementAbsenceRoutes from "./modules/agreement/absenceRequest/route";
 import agreementAbsenceAttendanceRoutes from "./modules/agreement/absenceAttendance/route";
 
+// reports
+import reportsAbsenceRoutes from "./modules/reports/absence/route";
+
 class App {
   public app: Application;
 
@@ -111,7 +114,13 @@ class App {
 
     // agreement
     this.app.use("/api/agreement/absenceRequest", agreementAbsenceRoutes);
-    this.app.use("/api/agreement/absenceAttendance", agreementAbsenceAttendanceRoutes);
+    this.app.use(
+      "/api/agreement/absenceAttendance",
+      agreementAbsenceAttendanceRoutes
+    );
+
+    // reports
+    this.app.use("/api/reports/absence", reportsAbsenceRoutes);
 
     this.app.use(function (req, res, next) {
       next(createError(404));
