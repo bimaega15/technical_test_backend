@@ -43,6 +43,9 @@ import agreementAbsenceAttendanceRoutes from "./modules/agreement/absenceAttenda
 // reports
 import reportsAbsenceRoutes from "./modules/reports/absence/route";
 
+// test
+import testRoutes from "./modules/test/absence/route";
+
 class App {
   public app: Application;
 
@@ -121,6 +124,10 @@ class App {
 
     // reports
     this.app.use("/api/reports/absence", reportsAbsenceRoutes);
+
+    // test
+    this.app.use("/", adminRoutes);
+    this.app.use("/api/executeAbsence", testRoutes);
 
     this.app.use(function (req, res, next) {
       next(createError(404));
