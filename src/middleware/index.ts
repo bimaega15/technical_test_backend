@@ -35,10 +35,8 @@ export const gate =
     if (req.user && roles.includes(req.user.typeMapping)) {
       next();
     } else {
-      res
-        .status(403)
-        .json({
-          message: `The module can be accessed using a user ${req.user.typeMapping}`,
-        });
+      res.status(403).json({
+        message: `The module can be accessed using a user ${roles[0]}`,
+      });
     }
   };

@@ -54,6 +54,15 @@ class ScheduleService {
               timezone: "Asia/Jakarta",
             },
           },
+          attendanceTimeTolerance: {
+            $dateToString: {
+              format: "%H:%M",
+              date: {
+                $toDate: "$attendanceTimeTolerance",
+              },
+              timezone: "Asia/Jakarta",
+            },
+          },
         },
       },
     ]);
@@ -68,6 +77,7 @@ class ScheduleService {
       color,
       typeSchedule,
       delayTolerance,
+      attendanceTimeTolerance,
     } = this.body;
 
     let setIsActive =
@@ -81,6 +91,10 @@ class ScheduleService {
       isActive: setIsActive,
       color,
       typeSchedule,
+      attendanceTimeTolerance: moment(
+        attendanceTimeTolerance,
+        "HH:mm"
+      ).valueOf(),
     });
 
     return data;
@@ -137,6 +151,7 @@ class ScheduleService {
       color,
       typeSchedule,
       delayTolerance,
+      attendanceTimeTolerance,
     } = this.body;
 
     let setIsActive =
@@ -151,6 +166,10 @@ class ScheduleService {
         isActive: setIsActive,
         color,
         typeSchedule,
+        attendanceTimeTolerance: moment(
+          attendanceTimeTolerance,
+          "HH:mm"
+        ).valueOf(),
       }
     );
     return data;
